@@ -1,3 +1,4 @@
+document.getElementById("fnqFenceCalcMount").innerHTML = `
 <section id="fnqFenceCalcPro" style="background:#121212;padding:60px 16px;font-family:Poppins,Arial,sans-serif;color:#F5F1E8;">
   <style>
     #fnqFenceCalcPro *{box-sizing:border-box}
@@ -995,3 +996,4 @@
     })();
   </script>
 </section>
+`;
