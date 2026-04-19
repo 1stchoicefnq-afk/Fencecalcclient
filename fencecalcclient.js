@@ -1,4 +1,8 @@
-document.getElementById("fnqFenceCalcMount").innerHTML = `
+(function () {
+  var mount = document.getElementById("fnqFenceCalcMount");
+  if (!mount) return;
+
+  mount.innerHTML = `
 <section id="fnqFenceCalcPro" style="background:#121212;padding:60px 16px;font-family:Poppins,Arial,sans-serif;color:#F5F1E8;">
   <style>
     #fnqFenceCalcPro *{box-sizing:border-box}
@@ -414,586 +418,585 @@ document.getElementById("fnqFenceCalcMount").innerHTML = `
       </form>
     </div>
   </div>
-
-  <script>
-    (function(){
-      const FORM_ACTION="https://formsubmit.co/1stchoicefnq@gmail.com";
-      const GST=1.1;
-
-      const RATE_TIMBER_STD_EX=190/GST;
-      const RATE_TIMBER_OC18_EX=220/GST;
-      const RATE_TIMBER_OC20_EX=320/GST;
-      const RATE_CB_STD_EX=220/GST;
-      const RATE_POOL_ALU_EX=250/GST;
-      const RATE_POOL_GLASS_EX=480/GST;
-      const RATE_ALU_SLAT_EX=680/GST;
-      const RATE_PRESS_POINT_EX=450/GST;
-      const RATE_CHAINWIRE_EX=130/GST;
-
-      const SLEEPER_TIMBER_PER_M_EX=50/GST;
-      const SLEEPER_ALU_PER_M_EX=90/GST;
-
-      const GATE_TIMBER_SINGLE_EX=1200/GST;
-      const GATE_TIMBER_DOUBLE_EX=2200/GST;
-      const GATE_CB_SINGLE_EX=1300/GST;
-      const GATE_CB_DOUBLE_EX=2400/GST;
-      const GATE_CHAIN_SINGLE_EX=950/GST;
-      const GATE_CHAIN_DOUBLE_EX=1800/GST;
-
-      const REMOVE_FENCE_PER_M_TIMBER_OR_STEEL_EX=10/GST;
-      const CONCRETE_DUMP_PER_M2_EX=50/GST;
-
-      const accessMult={easy:1,limited:1.12,none:1.25};
-      const sidesMult={"2":1.03,"3":1.06,"4":1.08};
-      const slopeMult={flat:1,minor:1.05,moderate:1.10,steep:1.18};
-      const groundAdderPerMEx={standard:0,roots:25/GST,rock:70/GST,unsure:15/GST};
-
-      const FRONT_ALLOWANCE_EX=400/GST;
-      const URGENT_PCT_NORMAL=.10;
-      const URGENT_PCT_OVER_20K=.08;
-      const URGENT_THRESHOLD_EX=20000/GST;
-      const MULTIPLIER_CAP=1.35;
-      const MIN_FENCE_JOB_EX=1200/GST;
-
-      const ON_WALL_ALLOWANCE_PER_M_EX=18/GST;
-      const CORNER_RETURN_ALLOWANCE_EX=240/GST;
-
-      const POOL_GATE_SINGLE_MULT=1.10;
-      const GLASS_GATE_SINGLE_MULT=1.35;
-      const SLAT_GATE_SINGLE_MULT=1.60;
-      const SLAT_GATE_DOUBLE_MULT=2.70;
-      const PRESS_GATE_SINGLE_MULT=1.40;
-      const PRESS_GATE_DOUBLE_MULT=2.40;
-      const CUSTOM_GATE_SINGLE_MULT=.95;
-      const CUSTOM_GATE_DOUBLE_MULT=1.75;
-
-      const CHAIN_CORNER_ASSEMBLY_EX=150/GST;
-      const CHAIN_END_ASSEMBLY_EX=90/GST;
-      const CHAIN_HEAVY_SETUP_PER_M_EX=6/GST;
-      const CHAIN_CLEARING_EX={none:0,light:400/GST,moderate:900/GST,heavy:1800/GST};
-
-      const SLIDE_STD_18H_GAL_EX={3.0:1338.10/GST,4.0:1500.00/GST,5.0:1693.35/GST,6.0:1970.88/GST};
-      const SLIDE_PP_15H_EX=[{min:3.6,max:4.9,ex:1973.24/GST},{min:5.0,max:6.0,ex:2425.67/GST},{min:7.0,max:7.0,ex:2686.99/GST}];
-      const SLIDE_PP_18H_EX=[{min:2.0,max:2.5,ex:1136.67/GST},{min:3.6,max:4.9,ex:2221.49/GST},{min:5.0,max:6.0,ex:2735.00/GST}];
-      const SLIDE_PP_21H_EX=[{min:2.0,max:2.5,ex:1071.28/GST},{min:3.0,max:4.9,ex:2471.34/GST},{min:5.0,max:6.0,ex:2818.50/GST}];
-
-      const SLIDE_GATE_MATERIAL_MARKUP=1.35;
-      const SLIDE_TRACK_HARDWARE_ALLOW_EX=650/GST;
-      const SLIDE_POSTS_ALLOW_EX=380/GST;
-      const SLIDE_TRACK_FOOTING_ALLOW_EX=1200/GST;
-      const SLIDE_INSTALL_LABOUR_ALLOW_EX=2200/GST;
-      const SLIDE_MOTOR_KIT_EX=1236.68/GST;
-
-      const COLORBOND_COLOURS=["Surfmist","Classic Cream","Paperbark","Evening Haze","Dune","Riversand","Domain","Shale Grey","Bluegum","Pale Eucalypt","Wilderness","Woodland Grey","Basalt","Ironstone","Monument","Gully","Jasper","Wallaby","Deep Ocean","Night Sky","Cottage Green","Manor Red","Other or special order"];
-      const ALU_SLAT_COLOURS=["Monument","Surfmist","Pearl White","Black Satin","Woodland Grey","Other or special order"];
-
-      const PREVIEW_MAP={
-        colorbondStd:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/colorbond-hero-image.png/",
-          label:"Colorbond fence"
-        },
-        poolAlu:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Pool-fencing-cairns-hero-image.png/",
-          label:"Flat top pool fence"
-        },
-        poolGlass:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/glassfence-cairns.png/",
-          label:"Glass pool fence"
-        },
-        aluSlat:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Aluminumslat-hero-image.png/",
-          label:"Aluminium slat fence"
-        },
-        press:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/presspoint.png/",
-          label:"Spear top / press point fence"
-        },
-        timberStd:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
-          label:"Timber paling fence"
-        },
-        timberOC18:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
-          label:"Timber overlap and cap fence"
-        },
-        timberOC20:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
-          label:"Timber overlap and cap with sleeper base"
-        }
-      };
-
-      const $=id=>document.getElementById(id);
-      const el={
-        site:$("fc_siteAddress2"),position:$("fc_position2"),sidesWrap:$("fc_sidesWrap2"),sides:$("fc_sides2"),
-        type:$("fc_fenceType2"),customWrap:$("fc_customFenceWrap2"),custom:$("fc_customFence2"),height:$("fc_fenceHeight2"),
-        len:$("fc_length2"),slope:$("fc_slope2"),access:$("fc_access2"),ground:$("fc_ground2"),timeline:$("fc_timeline2"),
-        budget:$("fc_budget2"),remove:$("fc_removeFence2"),sleeper:$("fc_sleeper2"),sleeperHint:$("fc_sleeperHint2"),colourWrap:$("fc_colourWrap2"),
-        colour:$("fc_colour2"),corner:$("fc_cornerReturn2"),onWall:$("fc_onWall2"),singleQty:$("fc_singleGateQty2"),
-        doubleQty:$("fc_doubleGateQty2"),slide:$("fc_autoSlideGate2"),slideWidthWrap:$("fc_slideGateWidthWrap2"),
-        slideWidth:$("fc_slideGateWidth2"),slideDirWrap:$("fc_slideDirWrap2"),slideDir:$("fc_slideDir2"),
-        elec:$("fc_elecNoteWrap2"),notes:$("fc_notes2"),
-        chainWrap:$("fc_chainWrap2"),chainCorners:$("fc_chainCorners2"),chainClearing:$("fc_chainClearing2"),chainSpec:$("fc_chainSpec2"),chainEnds:$("fc_chainEnds2"),
-        totalRange:$("fc_totalRange2"),rate:$("fc_rateDisplay2"),lengthDisplay:$("fc_lengthDisplay2"),
-        typeOut:$("fc_typeOut2"),heightOut:$("fc_heightOut2"),baseOut:$("fc_baseOut2"),gateOut:$("fc_gateOut2"),
-        extraOut:$("fc_extraOut2"),adjOut:$("fc_adjOut2"),totalOut:$("fc_totalOut2"),singleOut:$("fc_singleOut2"),
-        doubleOut:$("fc_doubleOut2"),slideOut:$("fc_slideOut2"),accessOut:$("fc_accessOut2"),groundOut:$("fc_groundOut2"),
-        positionOut:$("fc_positionOut2"),result:$("fc_result2"),
-        hSum:$("fc_hidden_summary2"),hTotal:$("fc_hidden_total2"),hBudget:$("fc_hidden_budget2"),hAddr:$("fc_hidden_addr2"),
-        hPos:$("fc_hidden_position2"),hSides:$("fc_hidden_sides2"),hAccess:$("fc_hidden_access2"),hGround:$("fc_hidden_ground2"),
-        hTimeline:$("fc_hidden_timeline2"),hFence:$("fc_hidden_fence2"),
-        quoteForm:$("fc_quoteForm2"),submitBtn:$("fc_submitBtn2"),formStatus:$("fc_formStatus2")
-      };
-
-      el.type.innerHTML='' +
-        '<option value="timberStd">Timber paling</option>' +
-        '<option value="timberOC18">Timber overlap and cap</option>' +
-        '<option value="timberOC20">Timber overlap and cap with sleeper base</option>' +
-        '<option value="colorbondStd">Colorbond</option>' +
-        '<option value="chainwire">Chainwire steel posts</option>' +
-        '<option value="poolAlu">Pool fence aluminium, flat top</option>' +
-        '<option value="poolGlass">Frameless glass pool fence</option>' +
-        '<option value="aluSlat">Aluminium slat</option>' +
-        '<option value="press">Press point, spear top</option>' +
-        '<option value="other">Other or custom</option>';
-
-      function money(n){return "$"+Math.round(n).toLocaleString("en-AU")}
-      function isWholePositiveInt(n){return Number.isFinite(n)&&n>0&&Number.isInteger(n)}
-      function applyGst(n){return n*GST}
-      function isChainwire(){return el.type.value==="chainwire"}
-
-      function setStatus(node,msg,isOk){
-        if(!node) return;
-        node.textContent=msg||"";
-        node.className="send-status"+(msg?(" "+(isOk?"ok":"err")):"");
-      }
-
-      function updatePerimeter(){el.sidesWrap.style.display=el.position.value==="perimeter"?"block":"none"}
-      function updateCustom(){el.customWrap.style.display=el.type.value==="other"?"block":"none"}
-      function updateChainwireUI(){el.chainWrap.style.display=isChainwire()?"block":"none"}
-      function updateSlideUI(){
-        const on=el.slide.value==="yes";
-        el.slideWidthWrap.classList.toggle("hide",!on);
-        el.slideDirWrap.classList.toggle("hide",!on);
-        el.elec.classList.toggle("hide",!on);
-      }
-
-      function updateHeights(){
-        let h=[],t=el.type.value;
-        if(t==="timberOC20") h=[2.0];
-        else if(t==="poolAlu"||t==="poolGlass") h=[1.2];
-        else if(t==="aluSlat") h=[1.8];
-        else if(t==="press") h=[1.5,1.8,2.1];
-        else if(t==="chainwire") h=[1.8];
-        else h=[1.2,1.5,1.8];
-        if(el.position.value==="front"&&t!=="poolAlu"&&t!=="poolGlass"&&t!=="chainwire") h=Array.from(new Set(h.concat([2.0]))).sort((a,b)=>a-b);
-        const old=el.height.value;
-        el.height.innerHTML=h.map(v=>'<option value="'+v+'">'+Math.round(v*1000)+' mm</option>').join("");
-        if([].slice.call(el.height.options).some(o=>o.value===old)) el.height.value=old;
-      }
-
-      function updateSleeper(){
-        let t=el.type.value;
-        el.sleeperHint.style.display="none";
-
-        if(t==="timberOC20"){
-          el.sleeper.innerHTML='<option value="included">Included</option>';
-          el.sleeper.disabled=true;
-          return;
-        }
-
-        if(t==="colorbondStd"){
-          el.sleeper.innerHTML='<option value="none">No sleeper</option><option value="timber">Timber sleeper</option><option value="aluminium">Aluminium sleeper, recommended</option>';
-          el.sleeper.disabled=false;
-          el.sleeperHint.style.display="block";
-          return;
-        }
-
-        if(t==="timberStd"||t==="timberOC18"){
-          el.sleeper.innerHTML='<option value="none">None</option><option value="timber">Timber sleeper</option>';
-          el.sleeper.disabled=false;
-          return;
-        }
-
-        el.sleeper.innerHTML='<option value="none">None</option>';
-        el.sleeper.disabled=true;
-      }
-
-      function updateColour(){
-        let t=el.type.value;
-        if(t==="colorbondStd"){
-          el.colourWrap.style.display="block";
-          el.colour.innerHTML=COLORBOND_COLOURS.map(c=>'<option value="'+c+'">'+c+'</option>').join("");
-          return;
-        }
-        if(t==="aluSlat"){
-          el.colourWrap.style.display="block";
-          el.colour.innerHTML=ALU_SLAT_COLOURS.map(c=>'<option value="'+c+'">'+c+'</option>').join("");
-          return;
-        }
-        el.colourWrap.style.display="none";
-        el.colour.innerHTML="";
-      }
-
-      function validate(){
-        if(!(el.site.value||"").trim()) return {ok:false,msg:"Please enter the site address including suburb."};
-        let len=Number((el.len.value||"").trim());
-        if(!isWholePositiveInt(len)) return {ok:false,msg:"Please enter whole metres for fence length, example 35."};
-        if(el.slide.value==="yes"){
-          let w=Number((el.slideWidth.value||"").trim());
-          if(!Number.isFinite(w)||w<2.0) return {ok:false,msg:"Please enter a sliding gate width, example 3.9."};
-        }
-        if(el.type.value==="other"&&!(el.custom.value||"").trim()) return {ok:false,msg:"Please add custom fence notes so we know what style you want."};
-        return {ok:true};
-      }
-
-      function rateEx(t){
-        if(t==="timberStd") return RATE_TIMBER_STD_EX;
-        if(t==="timberOC18") return RATE_TIMBER_OC18_EX;
-        if(t==="timberOC20") return RATE_TIMBER_OC20_EX;
-        if(t==="colorbondStd") return RATE_CB_STD_EX;
-        if(t==="chainwire") return RATE_CHAINWIRE_EX;
-        if(t==="poolAlu") return RATE_POOL_ALU_EX;
-        if(t==="poolGlass") return RATE_POOL_GLASS_EX;
-        if(t==="aluSlat") return RATE_ALU_SLAT_EX;
-        if(t==="press") return RATE_PRESS_POINT_EX;
-        return RATE_CB_STD_EX;
-      }
-
-      function singleGateEx(t){
-        if(t==="chainwire") return GATE_CHAIN_SINGLE_EX;
-        if(t==="colorbondStd") return GATE_CB_SINGLE_EX;
-        if(t==="timberStd"||t==="timberOC18"||t==="timberOC20") return GATE_TIMBER_SINGLE_EX;
-        if(t==="poolAlu") return GATE_CB_SINGLE_EX*POOL_GATE_SINGLE_MULT;
-        if(t==="poolGlass") return GATE_CB_SINGLE_EX*GLASS_GATE_SINGLE_MULT;
-        if(t==="aluSlat") return GATE_CB_SINGLE_EX*SLAT_GATE_SINGLE_MULT;
-        if(t==="press") return GATE_CB_SINGLE_EX*PRESS_GATE_SINGLE_MULT;
-        return GATE_CB_SINGLE_EX*CUSTOM_GATE_SINGLE_MULT;
-      }
-
-      function doubleGateEx(t){
-        if(t==="chainwire") return GATE_CHAIN_DOUBLE_EX;
-        if(t==="colorbondStd") return GATE_CB_DOUBLE_EX;
-        if(t==="timberStd"||t==="timberOC18"||t==="timberOC20") return GATE_TIMBER_DOUBLE_EX;
-        if(t==="poolAlu"||t==="poolGlass") return 0;
-        if(t==="aluSlat") return GATE_CB_DOUBLE_EX*SLAT_GATE_DOUBLE_MULT;
-        if(t==="press") return GATE_CB_DOUBLE_EX*PRESS_GATE_DOUBLE_MULT;
-        return GATE_CB_DOUBLE_EX*CUSTOM_GATE_DOUBLE_MULT;
-      }
-
-      function pickStdSlide(width){
-        const keys=[3.0,4.0,5.0,6.0];
-        let best=6.0;
-        for(let i=0;i<keys.length;i++){ if(width<=keys[i]+0.01){ best=keys[i]; break; } }
-        return SLIDE_STD_18H_GAL_EX[best]||SLIDE_STD_18H_GAL_EX[6.0];
-      }
-
-      function pickPressSlide(h,width){
-        const hh=(h<=1.55)?1.5:(h>=2.0?2.1:1.8);
-        const list=hh===1.5?SLIDE_PP_15H_EX:(hh===2.1?SLIDE_PP_21H_EX:SLIDE_PP_18H_EX);
-        for(let i=0;i<list.length;i++){ if(width>=list[i].min-0.001&&width<=list[i].max+0.001) return list[i].ex; }
-        let best=list[0].ex,bestDist=9999;
-        for(let i=0;i<list.length;i++){
-          const mid=(list[i].min+list[i].max)/2,dist=Math.abs(width-mid);
-          if(dist<bestDist){bestDist=dist;best=list[i].ex;}
-        }
-        return best;
-      }
-
-      function slideGateEx(type,height,width){
-        const gateLeaf=(type==="press"?pickPressSlide(height,width):pickStdSlide(width))*SLIDE_GATE_MATERIAL_MARKUP;
-        return gateLeaf+SLIDE_TRACK_HARDWARE_ALLOW_EX+SLIDE_POSTS_ALLOW_EX+SLIDE_TRACK_FOOTING_ALLOW_EX+SLIDE_INSTALL_LABOUR_ALLOW_EX+SLIDE_MOTOR_KIT_EX;
-      }
-
-      function rangeFactor(){
-        let low=.06,high=.08;
-        if(el.access.value==="limited"){low+=.02;high+=.03}
-        if(el.access.value==="none"){low+=.04;high+=.05}
-        if(el.ground.value==="roots"){low+=.02;high+=.03}
-        if(el.ground.value==="rock"){low+=.04;high+=.06}
-        if(el.ground.value==="unsure"){low+=.03;high+=.04}
-        if(el.position.value==="perimeter"){low+=.02;high+=.03}
-        if(el.slope.value==="minor"){low+=.01;high+=.02}
-        if(el.slope.value==="moderate"){low+=.02;high+=.03}
-        if(el.slope.value==="steep"){low+=.03;high+=.05}
-        if(el.timeline.value==="urgent"){low+=.01;high+=.02}
-        if(isChainwire()){
-          const cc=Number(el.chainCorners.value||0);
-          if(cc>=4){low+=.01;high+=.02}
-          if(el.chainClearing.value==="moderate"){low+=.01;high+=.02}
-          if(el.chainClearing.value==="heavy"){low+=.02;high+=.03}
-        }
-        return {low:Math.min(low,.18),high:Math.min(high,.22)};
-      }
-
-      function calc(){
-        const len=Number(el.len.value||0),type=el.type.value,height=Number(el.height.value||0);
-        const singleQty=Number(el.singleQty.value||0),doubleQty=Number(el.doubleQty.value||0);
-
-        let base=len*rateEx(type),gates=0,extras=0;
-
-        if(el.sleeper.value==="timber") extras+=len*SLEEPER_TIMBER_PER_M_EX;
-        if(el.sleeper.value==="aluminium") extras+=len*SLEEPER_ALU_PER_M_EX;
-
-        gates+=singleQty*singleGateEx(type);
-        gates+=doubleQty*doubleGateEx(type);
-        if(el.slide.value==="yes") gates+=slideGateEx(type,height,Number(el.slideWidth.value||0));
-
-        if(el.remove.value==="timber"||el.remove.value==="metal") extras+=len*REMOVE_FENCE_PER_M_TIMBER_OR_STEEL_EX;
-        if(el.remove.value==="block") extras+=(len*height)*CONCRETE_DUMP_PER_M2_EX;
-
-        extras+=len*(groundAdderPerMEx[el.ground.value]||0);
-
-        if(el.corner.checked) extras+=CORNER_RETURN_ALLOWANCE_EX;
-        if(el.onWall.checked) extras+=len*ON_WALL_ALLOWANCE_PER_M_EX;
-        if(el.position.value==="front") extras+=FRONT_ALLOWANCE_EX;
-
-        if(isChainwire()){
-          extras+=Number(el.chainCorners.value||0)*CHAIN_CORNER_ASSEMBLY_EX;
-          extras+=Number(el.chainEnds.value||0)*CHAIN_END_ASSEMBLY_EX;
-          extras+=(CHAIN_CLEARING_EX[el.chainClearing.value]||0);
-          if(el.chainSpec.value==="heavy") extras+=len*CHAIN_HEAVY_SETUP_PER_M_EX;
-        }
-
-        const raw=base+gates+extras;
-        let total=raw;
-
-        total*=accessMult[el.access.value]||1;
-        total*=slopeMult[el.slope.value]||1;
-        if(el.position.value==="perimeter") total*=sidesMult[el.sides.value]||1.03;
-
-        if(el.timeline.value==="urgent"){
-          const pct=total>=URGENT_THRESHOLD_EX?URGENT_PCT_OVER_20K:URGENT_PCT_NORMAL;
-          total*=(1+pct);
-        }
-
-        total=Math.min(total,raw*MULTIPLIER_CAP);
-        if(total<MIN_FENCE_JOB_EX) total=MIN_FENCE_JOB_EX;
-
-        return {base:base,gates:gates,extras:extras,adjust:total-(base+gates+extras),total:total};
-      }
-
-      function details(c){
-        let s="";
-        s+="Fence type: "+el.type.options[el.type.selectedIndex].text+"\n";
-        if((el.custom.value||"").trim()) s+="Custom notes: "+el.custom.value.trim()+"\n";
-        s+="Fence height: "+el.height.options[el.height.selectedIndex].text+"\n";
-        s+="Fence length: "+el.len.value+" m\n";
-        s+="Position: "+el.position.options[el.position.selectedIndex].text+"\n";
-        if(el.position.value==="perimeter") s+="Sides: "+el.sides.value+"\n";
-        s+="Slope: "+el.slope.options[el.slope.selectedIndex].text+"\n";
-        s+="Access: "+el.access.options[el.access.selectedIndex].text+"\n";
-        s+="Ground: "+el.ground.options[el.ground.selectedIndex].text+"\n";
-        s+="Timeline: "+el.timeline.options[el.timeline.selectedIndex].text+"\n";
-        s+="Remove existing: "+el.remove.options[el.remove.selectedIndex].text+"\n";
-        s+="Sleeper: "+el.sleeper.options[el.sleeper.selectedIndex].text+"\n";
-        if(el.colour.value) s+="Colour: "+el.colour.value+"\n";
-        if(isChainwire()){
-          s+="Chainwire corners / strain assemblies: "+el.chainCorners.value+"\n";
-          s+="Chainwire end assemblies: "+el.chainEnds.value+"\n";
-          s+="Chainwire clearing: "+el.chainClearing.options[el.chainClearing.selectedIndex].text+"\n";
-          s+="Chainwire setup: "+el.chainSpec.options[el.chainSpec.selectedIndex].text+"\n";
-        }
-        s+="Corner / return: "+(el.corner.checked?"Yes":"No")+"\n";
-        s+="On wall / slab fixing: "+(el.onWall.checked?"Yes":"No")+"\n";
-        s+="Single gates: "+el.singleQty.value+"\n";
-        s+="Double gates: "+el.doubleQty.value+"\n";
-        if(el.slide.value==="yes"){
-          s+="Automated sliding gate: Yes\n";
-          s+="Sliding gate width: "+(el.slideWidth.value||"")+" m\n";
-          s+="Sliding direction: "+el.slideDir.options[el.slideDir.selectedIndex].text+"\n";
-          s+="Electrical: Licensed electrician required, quoted separately\n";
-        } else {
-          s+="Automated sliding gate: No\n";
-        }
-        if((el.notes.value||"").trim()) s+="Extra notes: "+el.notes.value.trim()+"\n";
-        s+="Estimated total: "+money(applyGst(c.total))+" incl GST\n";
-        return s.trim();
-      }
-
-      function updateHidden(c,rangeText){
-        const d=details(c);
-        el.hSum.value=d;
-        el.hTotal.value=rangeText;
-        el.hBudget.value=el.budget.value;
-        el.hAddr.value=(el.site.value||"").trim();
-        el.hPos.value=el.position.value;
-        el.hSides.value=el.position.value==="perimeter"?(el.sides.value||""):"";
-        el.hAccess.value=el.access.value;
-        el.hGround.value=el.ground.value;
-        el.hTimeline.value=el.timeline.value;
-        el.hFence.value=d;
-      }
-
-      function render(){
-        const v=validate();
-        if(!v.ok){
-          el.result.innerHTML='<div class="hint">'+v.msg+'</div>';
-          el.totalRange.textContent="$0 to $0";
-          el.rate.textContent="$0 to $0/m";
-          el.baseOut.textContent="$0";
-          el.gateOut.textContent="$0";
-          el.extraOut.textContent="$0";
-          el.adjOut.textContent="$0";
-          el.totalOut.textContent="$0";
-          el.typeOut.textContent="-";
-          el.heightOut.textContent="-";
-          el.singleOut.textContent="0";
-          el.doubleOut.textContent="0";
-          el.slideOut.textContent="None";
-          el.accessOut.textContent="-";
-          el.groundOut.textContent="-";
-          el.positionOut.textContent="-";
-          return;
-        }
-
-        const c=calc(),rf=rangeFactor(),display=applyGst(c.total),len=Math.max(Number(el.len.value||1),1);
-
-        const fenceOnlyEx = c.base + c.extras + c.adjust;
-        const fenceOnlyInc = applyGst(fenceOnlyEx);
-
-        const lo = fenceOnlyInc * (1-rf.low);
-        const hi = fenceOnlyInc * (1+rf.high);
-
-        const rateLow = Math.round(lo/len);
-        const rateHigh = Math.round(hi/len);
-        const rangeText = money(lo)+" to "+money(hi);
-
-        el.totalRange.textContent=rangeText;
-        el.rate.textContent=money(rateLow)+" to "+money(rateHigh)+"/m";
-        el.lengthDisplay.textContent=len+"m";
-        el.typeOut.textContent=el.type.options[el.type.selectedIndex].text;
-        el.heightOut.textContent=el.height.options[el.height.selectedIndex].text;
-        el.baseOut.textContent=money(applyGst(c.base));
-        el.gateOut.textContent=money(applyGst(c.gates));
-        el.extraOut.textContent=money(applyGst(c.extras));
-        el.adjOut.textContent=money(applyGst(c.adjust));
-        el.totalOut.textContent=money(display);
-        el.singleOut.textContent=el.singleQty.value;
-        el.doubleOut.textContent=el.doubleQty.value;
-        el.slideOut.textContent=el.slide.value==="yes"?((el.slideWidth.value||"")+"m"):"None";
-        el.accessOut.textContent=el.access.options[el.access.selectedIndex].text;
-        el.groundOut.textContent=el.ground.options[el.ground.selectedIndex].text;
-        el.positionOut.textContent=el.position.options[el.position.selectedIndex].text;
-
-        let extraChainHints="";
-        if(isChainwire()){
-          extraChainHints=
-            '<div class="hint">Chainwire base rate used here is 130 per metre plus GST for 1.8 m chainwire with steel posts.</div>'+
-            '<div class="hint">Corners, strain assemblies, clearing, hard ground and gates are added separately where selected.</div>';
-        }
-
-        let upsellHtml="";
-        if(el.type.value==="colorbondStd"&&el.sleeper.value==="none"){
-          upsellHtml=
-            '<div class="hint" style="color:#E7D39B;">Recommended upgrade: aluminium sleeper under Colorbond gives a cleaner finish, lifts the sheets off the ground and usually lasts better long term.</div>';
-        }
-
-        let slopeHtml="";
-        if(el.slope.value!=="flat"){
-          slopeHtml=
-            '<div class="hint" style="color:#E7D39B;">Slope detected: this estimate has been adjusted for extra setout, stepping and installation labour.</div>';
-        }
-
-        const preview=PREVIEW_MAP[el.type.value];
-        const previewHtml=preview
-          ? '<div style="margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid rgba(198,167,94,.14);background:#101010;">' +
-              '<img src="'+preview.src+'" alt="'+preview.label+'" style="width:100%;height:180px;object-fit:cover;display:block;">' +
-              '<div style="padding:10px;font-size:13px;color:#aaa;text-align:center;">'+preview.label+'</div>' +
-            '</div>'
-          : '';
-
-        el.result.innerHTML='' +
-          '<div class="hint">Fence estimate: '+money(display)+' incl GST</div>' +
-          '<div class="hint">Estimated rate: Approximately '+money(rateLow)+' to '+money(rateHigh)+' per metre installed</div>' +
-          '<div class="hint">Estimated range: '+rangeText+'</div>' +
-          upsellHtml +
-          slopeHtml +
-          previewHtml +
-          '<div style="margin-top:12px;padding:14px 14px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(198,167,94,.10),rgba(198,167,94,.04));border:1px solid rgba(198,167,94,.18);">' +
-            '<div style="font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E7D39B;margin-bottom:8px;">Finance options</div>' +
-            '<div class="hint" style="margin:0 0 8px 0;color:#F5F1E8;">Need help getting the project done sooner?</div>' +
-            '<div class="hint" style="margin:0 0 10px 0;">If the upfront cost is the only thing holding the project back, finance options may be worth exploring.</div>' +
-            '<a href="https://greenfinancegroup.com.au/myfinancebroker/rodneyweir/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:10px;background:#C6A75E;color:#121212;text-decoration:none;font-size:14px;font-weight:800;">Explore finance options</a>' +
-            '<div class="hint" style="margin-top:10px;">Finance is not provided by 1st Choice Property Maintenance. The button above links directly to an independent finance broker. Any finance is arranged directly with the broker and is subject to approval, lending criteria and terms.</div>' +
-          '</div>' +
-          extraChainHints;
-
-        updateHidden(c,rangeText);
-      }
-
-      function ensureFrame(frameId){
-        let old=document.getElementById(frameId);
-        if(old) old.remove();
-        const iframe=document.createElement("iframe");
-        iframe.name=frameId;
-        iframe.id=frameId;
-        iframe.style.display="none";
-        document.body.appendChild(iframe);
-      }
-
-      function handleQuoteSubmit(e){
-        e.preventDefault();
-
-        const v=validate();
-        if(!v.ok){
-          render();
-          setStatus(el.formStatus,v.msg,false);
-          return;
-        }
-
-        const terms=document.getElementById("fc_terms2");
-        if(terms && !terms.checked){
-          setStatus(el.formStatus,"Please confirm the estimate only checkbox.",false);
-          return;
-        }
-
-        setStatus(el.formStatus,"Sending...",false);
-        el.submitBtn.disabled=true;
-        el.submitBtn.textContent="Sending...";
-
-        const iframeName="fcQuoteHiddenFrame2";
-        ensureFrame(iframeName);
-        el.quoteForm.target=iframeName;
-        el.quoteForm.action=FORM_ACTION;
-        el.quoteForm.submit();
-
-        setStatus(el.formStatus,"Thanks, your quote was sent. We will get back to you shortly.",true);
-        el.submitBtn.textContent="Sent";
-      }
-
-      function bind(){
-        [
-          el.site,el.position,el.sides,el.type,el.custom,el.height,el.len,el.slope,el.access,el.ground,el.timeline,
-          el.budget,el.remove,el.sleeper,el.colour,el.corner,el.onWall,el.singleQty,el.doubleQty,el.slide,
-          el.slideWidth,el.slideDir,el.notes,el.chainCorners,el.chainClearing,el.chainSpec,el.chainEnds
-        ].forEach(function(n){
-          n.addEventListener("input",render);
-          n.addEventListener("change",render);
-        });
-
-        el.position.addEventListener("change",function(){updatePerimeter();updateHeights();render()});
-        el.type.addEventListener("change",function(){
-          updateHeights();
-          updateSleeper();
-          updateColour();
-          updateCustom();
-          updateChainwireUI();
-          render();
-        });
-        el.slide.addEventListener("change",function(){updateSlideUI();render()});
-        el.quoteForm.addEventListener("submit",handleQuoteSubmit);
-      }
-
-      updatePerimeter();
-      updateHeights();
-      updateSleeper();
-      updateColour();
-      updateCustom();
-      updateChainwireUI();
-      updateSlideUI();
-      bind();
-      render();
-    })();
-  </script>
 </section>
 `;
+
+  (function(){
+    const FORM_ACTION="https://formsubmit.co/1stchoicefnq@gmail.com";
+    const GST=1.1;
+
+    const RATE_TIMBER_STD_EX=190/GST;
+    const RATE_TIMBER_OC18_EX=220/GST;
+    const RATE_TIMBER_OC20_EX=320/GST;
+    const RATE_CB_STD_EX=220/GST;
+    const RATE_POOL_ALU_EX=250/GST;
+    const RATE_POOL_GLASS_EX=480/GST;
+    const RATE_ALU_SLAT_EX=680/GST;
+    const RATE_PRESS_POINT_EX=450/GST;
+    const RATE_CHAINWIRE_EX=130/GST;
+
+    const SLEEPER_TIMBER_PER_M_EX=50/GST;
+    const SLEEPER_ALU_PER_M_EX=90/GST;
+
+    const GATE_TIMBER_SINGLE_EX=1200/GST;
+    const GATE_TIMBER_DOUBLE_EX=2200/GST;
+    const GATE_CB_SINGLE_EX=1300/GST;
+    const GATE_CB_DOUBLE_EX=2400/GST;
+    const GATE_CHAIN_SINGLE_EX=950/GST;
+    const GATE_CHAIN_DOUBLE_EX=1800/GST;
+
+    const REMOVE_FENCE_PER_M_TIMBER_OR_STEEL_EX=10/GST;
+    const CONCRETE_DUMP_PER_M2_EX=50/GST;
+
+    const accessMult={easy:1,limited:1.12,none:1.25};
+    const sidesMult={"2":1.03,"3":1.06,"4":1.08};
+    const slopeMult={flat:1,minor:1.05,moderate:1.10,steep:1.18};
+    const groundAdderPerMEx={standard:0,roots:25/GST,rock:70/GST,unsure:15/GST};
+
+    const FRONT_ALLOWANCE_EX=400/GST;
+    const URGENT_PCT_NORMAL=.10;
+    const URGENT_PCT_OVER_20K=.08;
+    const URGENT_THRESHOLD_EX=20000/GST;
+    const MULTIPLIER_CAP=1.35;
+    const MIN_FENCE_JOB_EX=1200/GST;
+
+    const ON_WALL_ALLOWANCE_PER_M_EX=18/GST;
+    const CORNER_RETURN_ALLOWANCE_EX=240/GST;
+
+    const POOL_GATE_SINGLE_MULT=1.10;
+    const GLASS_GATE_SINGLE_MULT=1.35;
+    const SLAT_GATE_SINGLE_MULT=1.60;
+    const SLAT_GATE_DOUBLE_MULT=2.70;
+    const PRESS_GATE_SINGLE_MULT=1.40;
+    const PRESS_GATE_DOUBLE_MULT=2.40;
+    const CUSTOM_GATE_SINGLE_MULT=.95;
+    const CUSTOM_GATE_DOUBLE_MULT=1.75;
+
+    const CHAIN_CORNER_ASSEMBLY_EX=150/GST;
+    const CHAIN_END_ASSEMBLY_EX=90/GST;
+    const CHAIN_HEAVY_SETUP_PER_M_EX=6/GST;
+    const CHAIN_CLEARING_EX={none:0,light:400/GST,moderate:900/GST,heavy:1800/GST};
+
+    const SLIDE_STD_18H_GAL_EX={3.0:1338.10/GST,4.0:1500.00/GST,5.0:1693.35/GST,6.0:1970.88/GST};
+    const SLIDE_PP_15H_EX=[{min:3.6,max:4.9,ex:1973.24/GST},{min:5.0,max:6.0,ex:2425.67/GST},{min:7.0,max:7.0,ex:2686.99/GST}];
+    const SLIDE_PP_18H_EX=[{min:2.0,max:2.5,ex:1136.67/GST},{min:3.6,max:4.9,ex:2221.49/GST},{min:5.0,max:6.0,ex:2735.00/GST}];
+    const SLIDE_PP_21H_EX=[{min:2.0,max:2.5,ex:1071.28/GST},{min:3.0,max:4.9,ex:2471.34/GST},{min:5.0,max:6.0,ex:2818.50/GST}];
+
+    const SLIDE_GATE_MATERIAL_MARKUP=1.35;
+    const SLIDE_TRACK_HARDWARE_ALLOW_EX=650/GST;
+    const SLIDE_POSTS_ALLOW_EX=380/GST;
+    const SLIDE_TRACK_FOOTING_ALLOW_EX=1200/GST;
+    const SLIDE_INSTALL_LABOUR_ALLOW_EX=2200/GST;
+    const SLIDE_MOTOR_KIT_EX=1236.68/GST;
+
+    const COLORBOND_COLOURS=["Surfmist","Classic Cream","Paperbark","Evening Haze","Dune","Riversand","Domain","Shale Grey","Bluegum","Pale Eucalypt","Wilderness","Woodland Grey","Basalt","Ironstone","Monument","Gully","Jasper","Wallaby","Deep Ocean","Night Sky","Cottage Green","Manor Red","Other or special order"];
+    const ALU_SLAT_COLOURS=["Monument","Surfmist","Pearl White","Black Satin","Woodland Grey","Other or special order"];
+
+    const PREVIEW_MAP={
+      colorbondStd:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/colorbond-hero-image.png/",
+        label:"Colorbond fence"
+      },
+      poolAlu:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Pool-fencing-cairns-hero-image.png/",
+        label:"Flat top pool fence"
+      },
+      poolGlass:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/glassfence-cairns.png/",
+        label:"Glass pool fence"
+      },
+      aluSlat:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Aluminumslat-hero-image.png/",
+        label:"Aluminium slat fence"
+      },
+      press:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/presspoint.png/",
+        label:"Spear top / press point fence"
+      },
+      timberStd:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
+        label:"Timber paling fence"
+      },
+      timberOC18:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
+        label:"Timber overlap and cap fence"
+      },
+      timberOC20:{
+        src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
+        label:"Timber overlap and cap with sleeper base"
+      }
+    };
+
+    const $=id=>document.getElementById(id);
+    const el={
+      site:$("fc_siteAddress2"),position:$("fc_position2"),sidesWrap:$("fc_sidesWrap2"),sides:$("fc_sides2"),
+      type:$("fc_fenceType2"),customWrap:$("fc_customFenceWrap2"),custom:$("fc_customFence2"),height:$("fc_fenceHeight2"),
+      len:$("fc_length2"),slope:$("fc_slope2"),access:$("fc_access2"),ground:$("fc_ground2"),timeline:$("fc_timeline2"),
+      budget:$("fc_budget2"),remove:$("fc_removeFence2"),sleeper:$("fc_sleeper2"),sleeperHint:$("fc_sleeperHint2"),colourWrap:$("fc_colourWrap2"),
+      colour:$("fc_colour2"),corner:$("fc_cornerReturn2"),onWall:$("fc_onWall2"),singleQty:$("fc_singleGateQty2"),
+      doubleQty:$("fc_doubleGateQty2"),slide:$("fc_autoSlideGate2"),slideWidthWrap:$("fc_slideGateWidthWrap2"),
+      slideWidth:$("fc_slideGateWidth2"),slideDirWrap:$("fc_slideDirWrap2"),slideDir:$("fc_slideDir2"),
+      elec:$("fc_elecNoteWrap2"),notes:$("fc_notes2"),
+      chainWrap:$("fc_chainWrap2"),chainCorners:$("fc_chainCorners2"),chainClearing:$("fc_chainClearing2"),chainSpec:$("fc_chainSpec2"),chainEnds:$("fc_chainEnds2"),
+      totalRange:$("fc_totalRange2"),rate:$("fc_rateDisplay2"),lengthDisplay:$("fc_lengthDisplay2"),
+      typeOut:$("fc_typeOut2"),heightOut:$("fc_heightOut2"),baseOut:$("fc_baseOut2"),gateOut:$("fc_gateOut2"),
+      extraOut:$("fc_extraOut2"),adjOut:$("fc_adjOut2"),totalOut:$("fc_totalOut2"),singleOut:$("fc_singleOut2"),
+      doubleOut:$("fc_doubleOut2"),slideOut:$("fc_slideOut2"),accessOut:$("fc_accessOut2"),groundOut:$("fc_groundOut2"),
+      positionOut:$("fc_positionOut2"),result:$("fc_result2"),
+      hSum:$("fc_hidden_summary2"),hTotal:$("fc_hidden_total2"),hBudget:$("fc_hidden_budget2"),hAddr:$("fc_hidden_addr2"),
+      hPos:$("fc_hidden_position2"),hSides:$("fc_hidden_sides2"),hAccess:$("fc_hidden_access2"),hGround:$("fc_hidden_ground2"),
+      hTimeline:$("fc_hidden_timeline2"),hFence:$("fc_hidden_fence2"),
+      quoteForm:$("fc_quoteForm2"),submitBtn:$("fc_submitBtn2"),formStatus:$("fc_formStatus2")
+    };
+
+    el.type.innerHTML='' +
+      '<option value="timberStd">Timber paling</option>' +
+      '<option value="timberOC18">Timber overlap and cap</option>' +
+      '<option value="timberOC20">Timber overlap and cap with sleeper base</option>' +
+      '<option value="colorbondStd">Colorbond</option>' +
+      '<option value="chainwire">Chainwire steel posts</option>' +
+      '<option value="poolAlu">Pool fence aluminium, flat top</option>' +
+      '<option value="poolGlass">Frameless glass pool fence</option>' +
+      '<option value="aluSlat">Aluminium slat</option>' +
+      '<option value="press">Press point, spear top</option>' +
+      '<option value="other">Other or custom</option>';
+
+    function money(n){return "$"+Math.round(n).toLocaleString("en-AU")}
+    function isWholePositiveInt(n){return Number.isFinite(n)&&n>0&&Number.isInteger(n)}
+    function applyGst(n){return n*GST}
+    function isChainwire(){return el.type.value==="chainwire"}
+
+    function setStatus(node,msg,isOk){
+      if(!node) return;
+      node.textContent=msg||"";
+      node.className="send-status"+(msg?(" "+(isOk?"ok":"err")):"");
+    }
+
+    function updatePerimeter(){el.sidesWrap.style.display=el.position.value==="perimeter"?"block":"none"}
+    function updateCustom(){el.customWrap.style.display=el.type.value==="other"?"block":"none"}
+    function updateChainwireUI(){el.chainWrap.style.display=isChainwire()?"block":"none"}
+    function updateSlideUI(){
+      const on=el.slide.value==="yes";
+      el.slideWidthWrap.classList.toggle("hide",!on);
+      el.slideDirWrap.classList.toggle("hide",!on);
+      el.elec.classList.toggle("hide",!on);
+    }
+
+    function updateHeights(){
+      let h=[],t=el.type.value;
+      if(t==="timberOC20") h=[2.0];
+      else if(t==="poolAlu"||t==="poolGlass") h=[1.2];
+      else if(t==="aluSlat") h=[1.8];
+      else if(t==="press") h=[1.5,1.8,2.1];
+      else if(t==="chainwire") h=[1.8];
+      else h=[1.2,1.5,1.8];
+      if(el.position.value==="front"&&t!=="poolAlu"&&t!=="poolGlass"&&t!=="chainwire") h=Array.from(new Set(h.concat([2.0]))).sort((a,b)=>a-b);
+      const old=el.height.value;
+      el.height.innerHTML=h.map(v=>'<option value="'+v+'">'+Math.round(v*1000)+' mm</option>').join("");
+      if([].slice.call(el.height.options).some(o=>o.value===old)) el.height.value=old;
+    }
+
+    function updateSleeper(){
+      let t=el.type.value;
+      el.sleeperHint.style.display="none";
+
+      if(t==="timberOC20"){
+        el.sleeper.innerHTML='<option value="included">Included</option>';
+        el.sleeper.disabled=true;
+        return;
+      }
+
+      if(t==="colorbondStd"){
+        el.sleeper.innerHTML='<option value="none">No sleeper</option><option value="timber">Timber sleeper</option><option value="aluminium">Aluminium sleeper, recommended</option>';
+        el.sleeper.disabled=false;
+        el.sleeperHint.style.display="block";
+        return;
+      }
+
+      if(t==="timberStd"||t==="timberOC18"){
+        el.sleeper.innerHTML='<option value="none">None</option><option value="timber">Timber sleeper</option>';
+        el.sleeper.disabled=false;
+        return;
+      }
+
+      el.sleeper.innerHTML='<option value="none">None</option>';
+      el.sleeper.disabled=true;
+    }
+
+    function updateColour(){
+      let t=el.type.value;
+      if(t==="colorbondStd"){
+        el.colourWrap.style.display="block";
+        el.colour.innerHTML=COLORBOND_COLOURS.map(c=>'<option value="'+c+'">'+c+'</option>').join("");
+        return;
+      }
+      if(t==="aluSlat"){
+        el.colourWrap.style.display="block";
+        el.colour.innerHTML=ALU_SLAT_COLOURS.map(c=>'<option value="'+c+'">'+c+'</option>').join("");
+        return;
+      }
+      el.colourWrap.style.display="none";
+      el.colour.innerHTML="";
+    }
+
+    function validate(){
+      if(!(el.site.value||"").trim()) return {ok:false,msg:"Please enter the site address including suburb."};
+      let len=Number((el.len.value||"").trim());
+      if(!isWholePositiveInt(len)) return {ok:false,msg:"Please enter whole metres for fence length, example 35."};
+      if(el.slide.value==="yes"){
+        let w=Number((el.slideWidth.value||"").trim());
+        if(!Number.isFinite(w)||w<2.0) return {ok:false,msg:"Please enter a sliding gate width, example 3.9."};
+      }
+      if(el.type.value==="other"&&!(el.custom.value||"").trim()) return {ok:false,msg:"Please add custom fence notes so we know what style you want."};
+      return {ok:true};
+    }
+
+    function rateEx(t){
+      if(t==="timberStd") return RATE_TIMBER_STD_EX;
+      if(t==="timberOC18") return RATE_TIMBER_OC18_EX;
+      if(t==="timberOC20") return RATE_TIMBER_OC20_EX;
+      if(t==="colorbondStd") return RATE_CB_STD_EX;
+      if(t==="chainwire") return RATE_CHAINWIRE_EX;
+      if(t==="poolAlu") return RATE_POOL_ALU_EX;
+      if(t==="poolGlass") return RATE_POOL_GLASS_EX;
+      if(t==="aluSlat") return RATE_ALU_SLAT_EX;
+      if(t==="press") return RATE_PRESS_POINT_EX;
+      return RATE_CB_STD_EX;
+    }
+
+    function singleGateEx(t){
+      if(t==="chainwire") return GATE_CHAIN_SINGLE_EX;
+      if(t==="colorbondStd") return GATE_CB_SINGLE_EX;
+      if(t==="timberStd"||t==="timberOC18"||t==="timberOC20") return GATE_TIMBER_SINGLE_EX;
+      if(t==="poolAlu") return GATE_CB_SINGLE_EX*POOL_GATE_SINGLE_MULT;
+      if(t==="poolGlass") return GATE_CB_SINGLE_EX*GLASS_GATE_SINGLE_MULT;
+      if(t==="aluSlat") return GATE_CB_SINGLE_EX*SLAT_GATE_SINGLE_MULT;
+      if(t==="press") return GATE_CB_SINGLE_EX*PRESS_GATE_SINGLE_MULT;
+      return GATE_CB_SINGLE_EX*CUSTOM_GATE_SINGLE_MULT;
+    }
+
+    function doubleGateEx(t){
+      if(t==="chainwire") return GATE_CHAIN_DOUBLE_EX;
+      if(t==="colorbondStd") return GATE_CB_DOUBLE_EX;
+      if(t==="timberStd"||t==="timberOC18"||t==="timberOC20") return GATE_TIMBER_DOUBLE_EX;
+      if(t==="poolAlu"||t==="poolGlass") return 0;
+      if(t==="aluSlat") return GATE_CB_DOUBLE_EX*SLAT_GATE_DOUBLE_MULT;
+      if(t==="press") return GATE_CB_DOUBLE_EX*PRESS_GATE_DOUBLE_MULT;
+      return GATE_CB_DOUBLE_EX*CUSTOM_GATE_DOUBLE_MULT;
+    }
+
+    function pickStdSlide(width){
+      const keys=[3.0,4.0,5.0,6.0];
+      let best=6.0;
+      for(let i=0;i<keys.length;i++){ if(width<=keys[i]+0.01){ best=keys[i]; break; } }
+      return SLIDE_STD_18H_GAL_EX[best]||SLIDE_STD_18H_GAL_EX[6.0];
+    }
+
+    function pickPressSlide(h,width){
+      const hh=(h<=1.55)?1.5:(h>=2.0?2.1:1.8);
+      const list=hh===1.5?SLIDE_PP_15H_EX:(hh===2.1?SLIDE_PP_21H_EX:SLIDE_PP_18H_EX);
+      for(let i=0;i<list.length;i++){ if(width>=list[i].min-0.001&&width<=list[i].max+0.001) return list[i].ex; }
+      let best=list[0].ex,bestDist=9999;
+      for(let i=0;i<list.length;i++){
+        const mid=(list[i].min+list[i].max)/2,dist=Math.abs(width-mid);
+        if(dist<bestDist){bestDist=dist;best=list[i].ex;}
+      }
+      return best;
+    }
+
+    function slideGateEx(type,height,width){
+      const gateLeaf=(type==="press"?pickPressSlide(height,width):pickStdSlide(width))*SLIDE_GATE_MATERIAL_MARKUP;
+      return gateLeaf+SLIDE_TRACK_HARDWARE_ALLOW_EX+SLIDE_POSTS_ALLOW_EX+SLIDE_TRACK_FOOTING_ALLOW_EX+SLIDE_INSTALL_LABOUR_ALLOW_EX+SLIDE_MOTOR_KIT_EX;
+    }
+
+    function rangeFactor(){
+      let low=.06,high=.08;
+      if(el.access.value==="limited"){low+=.02;high+=.03}
+      if(el.access.value==="none"){low+=.04;high+=.05}
+      if(el.ground.value==="roots"){low+=.02;high+=.03}
+      if(el.ground.value==="rock"){low+=.04;high+=.06}
+      if(el.ground.value==="unsure"){low+=.03;high+=.04}
+      if(el.position.value==="perimeter"){low+=.02;high+=.03}
+      if(el.slope.value==="minor"){low+=.01;high+=.02}
+      if(el.slope.value==="moderate"){low+=.02;high+=.03}
+      if(el.slope.value==="steep"){low+=.03;high+=.05}
+      if(el.timeline.value==="urgent"){low+=.01;high+=.02}
+      if(isChainwire()){
+        const cc=Number(el.chainCorners.value||0);
+        if(cc>=4){low+=.01;high+=.02}
+        if(el.chainClearing.value==="moderate"){low+=.01;high+=.02}
+        if(el.chainClearing.value==="heavy"){low+=.02;high+=.03}
+      }
+      return {low:Math.min(low,.18),high:Math.min(high,.22)};
+    }
+
+    function calc(){
+      const len=Number(el.len.value||0),type=el.type.value,height=Number(el.height.value||0);
+      const singleQty=Number(el.singleQty.value||0),doubleQty=Number(el.doubleQty.value||0);
+
+      let base=len*rateEx(type),gates=0,extras=0;
+
+      if(el.sleeper.value==="timber") extras+=len*SLEEPER_TIMBER_PER_M_EX;
+      if(el.sleeper.value==="aluminium") extras+=len*SLEEPER_ALU_PER_M_EX;
+
+      gates+=singleQty*singleGateEx(type);
+      gates+=doubleQty*doubleGateEx(type);
+      if(el.slide.value==="yes") gates+=slideGateEx(type,height,Number(el.slideWidth.value||0));
+
+      if(el.remove.value==="timber"||el.remove.value==="metal") extras+=len*REMOVE_FENCE_PER_M_TIMBER_OR_STEEL_EX;
+      if(el.remove.value==="block") extras+=(len*height)*CONCRETE_DUMP_PER_M2_EX;
+
+      extras+=len*(groundAdderPerMEx[el.ground.value]||0);
+
+      if(el.corner.checked) extras+=CORNER_RETURN_ALLOWANCE_EX;
+      if(el.onWall.checked) extras+=len*ON_WALL_ALLOWANCE_PER_M_EX;
+      if(el.position.value==="front") extras+=FRONT_ALLOWANCE_EX;
+
+      if(isChainwire()){
+        extras+=Number(el.chainCorners.value||0)*CHAIN_CORNER_ASSEMBLY_EX;
+        extras+=Number(el.chainEnds.value||0)*CHAIN_END_ASSEMBLY_EX;
+        extras+=(CHAIN_CLEARING_EX[el.chainClearing.value]||0);
+        if(el.chainSpec.value==="heavy") extras+=len*CHAIN_HEAVY_SETUP_PER_M_EX;
+      }
+
+      const raw=base+gates+extras;
+      let total=raw;
+
+      total*=accessMult[el.access.value]||1;
+      total*=slopeMult[el.slope.value]||1;
+      if(el.position.value==="perimeter") total*=sidesMult[el.sides.value]||1.03;
+
+      if(el.timeline.value==="urgent"){
+        const pct=total>=URGENT_THRESHOLD_EX?URGENT_PCT_OVER_20K:URGENT_PCT_NORMAL;
+        total*=(1+pct);
+      }
+
+      total=Math.min(total,raw*MULTIPLIER_CAP);
+      if(total<MIN_FENCE_JOB_EX) total=MIN_FENCE_JOB_EX;
+
+      return {base:base,gates:gates,extras:extras,adjust:total-(base+gates+extras),total:total};
+    }
+
+    function details(c){
+      let s="";
+      s+="Fence type: "+el.type.options[el.type.selectedIndex].text+"\\n";
+      if((el.custom.value||"").trim()) s+="Custom notes: "+el.custom.value.trim()+"\\n";
+      s+="Fence height: "+el.height.options[el.height.selectedIndex].text+"\\n";
+      s+="Fence length: "+el.len.value+" m\\n";
+      s+="Position: "+el.position.options[el.position.selectedIndex].text+"\\n";
+      if(el.position.value==="perimeter") s+="Sides: "+el.sides.value+"\\n";
+      s+="Slope: "+el.slope.options[el.slope.selectedIndex].text+"\\n";
+      s+="Access: "+el.access.options[el.access.selectedIndex].text+"\\n";
+      s+="Ground: "+el.ground.options[el.ground.selectedIndex].text+"\\n";
+      s+="Timeline: "+el.timeline.options[el.timeline.selectedIndex].text+"\\n";
+      s+="Remove existing: "+el.remove.options[el.remove.selectedIndex].text+"\\n";
+      s+="Sleeper: "+el.sleeper.options[el.sleeper.selectedIndex].text+"\\n";
+      if(el.colour.value) s+="Colour: "+el.colour.value+"\\n";
+      if(isChainwire()){
+        s+="Chainwire corners / strain assemblies: "+el.chainCorners.value+"\\n";
+        s+="Chainwire end assemblies: "+el.chainEnds.value+"\\n";
+        s+="Chainwire clearing: "+el.chainClearing.options[el.chainClearing.selectedIndex].text+"\\n";
+        s+="Chainwire setup: "+el.chainSpec.options[el.chainSpec.selectedIndex].text+"\\n";
+      }
+      s+="Corner / return: "+(el.corner.checked?"Yes":"No")+"\\n";
+      s+="On wall / slab fixing: "+(el.onWall.checked?"Yes":"No")+"\\n";
+      s+="Single gates: "+el.singleQty.value+"\\n";
+      s+="Double gates: "+el.doubleQty.value+"\\n";
+      if(el.slide.value==="yes"){
+        s+="Automated sliding gate: Yes\\n";
+        s+="Sliding gate width: "+(el.slideWidth.value||"")+" m\\n";
+        s+="Sliding direction: "+el.slideDir.options[el.slideDir.selectedIndex].text+"\\n";
+        s+="Electrical: Licensed electrician required, quoted separately\\n";
+      } else {
+        s+="Automated sliding gate: No\\n";
+      }
+      if((el.notes.value||"").trim()) s+="Extra notes: "+el.notes.value.trim()+"\\n";
+      s+="Estimated total: "+money(applyGst(c.total))+" incl GST\\n";
+      return s.trim();
+    }
+
+    function updateHidden(c,rangeText){
+      const d=details(c);
+      el.hSum.value=d;
+      el.hTotal.value=rangeText;
+      el.hBudget.value=el.budget.value;
+      el.hAddr.value=(el.site.value||"").trim();
+      el.hPos.value=el.position.value;
+      el.hSides.value=el.position.value==="perimeter"?(el.sides.value||""):"";
+      el.hAccess.value=el.access.value;
+      el.hGround.value=el.ground.value;
+      el.hTimeline.value=el.timeline.value;
+      el.hFence.value=d;
+    }
+
+    function render(){
+      const v=validate();
+      if(!v.ok){
+        el.result.innerHTML='<div class="hint">'+v.msg+'</div>';
+        el.totalRange.textContent="$0 to $0";
+        el.rate.textContent="$0 to $0/m";
+        el.baseOut.textContent="$0";
+        el.gateOut.textContent="$0";
+        el.extraOut.textContent="$0";
+        el.adjOut.textContent="$0";
+        el.totalOut.textContent="$0";
+        el.typeOut.textContent="-";
+        el.heightOut.textContent="-";
+        el.singleOut.textContent="0";
+        el.doubleOut.textContent="0";
+        el.slideOut.textContent="None";
+        el.accessOut.textContent="-";
+        el.groundOut.textContent="-";
+        el.positionOut.textContent="-";
+        return;
+      }
+
+      const c=calc(),rf=rangeFactor(),display=applyGst(c.total),len=Math.max(Number(el.len.value||1),1);
+
+      const fenceOnlyEx = c.base + c.extras + c.adjust;
+      const fenceOnlyInc = applyGst(fenceOnlyEx);
+
+      const lo = fenceOnlyInc * (1-rf.low);
+      const hi = fenceOnlyInc * (1+rf.high);
+
+      const rateLow = Math.round(lo/len);
+      const rateHigh = Math.round(hi/len);
+      const rangeText = money(lo)+" to "+money(hi);
+
+      el.totalRange.textContent=rangeText;
+      el.rate.textContent=money(rateLow)+" to "+money(rateHigh)+"/m";
+      el.lengthDisplay.textContent=len+"m";
+      el.typeOut.textContent=el.type.options[el.type.selectedIndex].text;
+      el.heightOut.textContent=el.height.options[el.height.selectedIndex].text;
+      el.baseOut.textContent=money(applyGst(c.base));
+      el.gateOut.textContent=money(applyGst(c.gates));
+      el.extraOut.textContent=money(applyGst(c.extras));
+      el.adjOut.textContent=money(applyGst(c.adjust));
+      el.totalOut.textContent=money(display);
+      el.singleOut.textContent=el.singleQty.value;
+      el.doubleOut.textContent=el.doubleQty.value;
+      el.slideOut.textContent=el.slide.value==="yes"?((el.slideWidth.value||"")+"m"):"None";
+      el.accessOut.textContent=el.access.options[el.access.selectedIndex].text;
+      el.groundOut.textContent=el.ground.options[el.ground.selectedIndex].text;
+      el.positionOut.textContent=el.position.options[el.position.selectedIndex].text;
+
+      let extraChainHints="";
+      if(isChainwire()){
+        extraChainHints=
+          '<div class="hint">Chainwire base rate used here is 130 per metre plus GST for 1.8 m chainwire with steel posts.</div>'+
+          '<div class="hint">Corners, strain assemblies, clearing, hard ground and gates are added separately where selected.</div>';
+      }
+
+      let upsellHtml="";
+      if(el.type.value==="colorbondStd"&&el.sleeper.value==="none"){
+        upsellHtml=
+          '<div class="hint" style="color:#E7D39B;">Recommended upgrade: aluminium sleeper under Colorbond gives a cleaner finish, lifts the sheets off the ground and usually lasts better long term.</div>';
+      }
+
+      let slopeHtml="";
+      if(el.slope.value!=="flat"){
+        slopeHtml=
+          '<div class="hint" style="color:#E7D39B;">Slope detected: this estimate has been adjusted for extra setout, stepping and installation labour.</div>';
+      }
+
+      const preview=PREVIEW_MAP[el.type.value];
+      const previewHtml=preview
+        ? '<div style="margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid rgba(198,167,94,.14);background:#101010;">' +
+            '<img src="'+preview.src+'" alt="'+preview.label+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#101010;">' +
+            '<div style="padding:10px;font-size:13px;color:#aaa;text-align:center;">'+preview.label+'</div>' +
+          '</div>'
+        : '';
+
+      el.result.innerHTML='' +
+        '<div class="hint">Fence estimate: '+money(display)+' incl GST</div>' +
+        '<div class="hint">Estimated rate: Approximately '+money(rateLow)+' to '+money(rateHigh)+' per metre installed</div>' +
+        '<div class="hint">Estimated range: '+rangeText+'</div>' +
+        upsellHtml +
+        slopeHtml +
+        previewHtml +
+        '<div style="margin-top:12px;padding:14px 14px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(198,167,94,.10),rgba(198,167,94,.04));border:1px solid rgba(198,167,94,.18);">' +
+          '<div style="font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E7D39B;margin-bottom:8px;">Finance options</div>' +
+          '<div class="hint" style="margin:0 0 8px 0;color:#F5F1E8;">Need help getting the project done sooner?</div>' +
+          '<div class="hint" style="margin:0 0 10px 0;">If the upfront cost is the only thing holding the project back, finance options may be worth exploring.</div>' +
+          '<a href="https://greenfinancegroup.com.au/myfinancebroker/rodneyweir/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border-radius:10px;background:#C6A75E;color:#121212;text-decoration:none;font-size:14px;font-weight:800;">Explore finance options</a>' +
+          '<div class="hint" style="margin-top:10px;">Finance is not provided by 1st Choice Property Maintenance. The button above links directly to an independent finance broker. Any finance is arranged directly with the broker and is subject to approval, lending criteria and terms.</div>' +
+        '</div>' +
+        extraChainHints;
+
+      updateHidden(c,rangeText);
+    }
+
+    function ensureFrame(frameId){
+      let old=document.getElementById(frameId);
+      if(old) old.remove();
+      const iframe=document.createElement("iframe");
+      iframe.name=frameId;
+      iframe.id=frameId;
+      iframe.style.display="none";
+      document.body.appendChild(iframe);
+    }
+
+    function handleQuoteSubmit(e){
+      e.preventDefault();
+
+      const v=validate();
+      if(!v.ok){
+        render();
+        setStatus(el.formStatus,v.msg,false);
+        return;
+      }
+
+      const terms=document.getElementById("fc_terms2");
+      if(terms && !terms.checked){
+        setStatus(el.formStatus,"Please confirm the estimate only checkbox.",false);
+        return;
+      }
+
+      setStatus(el.formStatus,"Sending...",false);
+      el.submitBtn.disabled=true;
+      el.submitBtn.textContent="Sending...";
+
+      const iframeName="fcQuoteHiddenFrame2";
+      ensureFrame(iframeName);
+      el.quoteForm.target=iframeName;
+      el.quoteForm.action=FORM_ACTION;
+      el.quoteForm.submit();
+
+      setStatus(el.formStatus,"Thanks, your quote was sent. We will get back to you shortly.",true);
+      el.submitBtn.textContent="Sent";
+    }
+
+    function bind(){
+      [
+        el.site,el.position,el.sides,el.type,el.custom,el.height,el.len,el.slope,el.access,el.ground,el.timeline,
+        el.budget,el.remove,el.sleeper,el.colour,el.corner,el.onWall,el.singleQty,el.doubleQty,el.slide,
+        el.slideWidth,el.slideDir,el.notes,el.chainCorners,el.chainClearing,el.chainSpec,el.chainEnds
+      ].forEach(function(n){
+        n.addEventListener("input",render);
+        n.addEventListener("change",render);
+      });
+
+      el.position.addEventListener("change",function(){updatePerimeter();updateHeights();render()});
+      el.type.addEventListener("change",function(){
+        updateHeights();
+        updateSleeper();
+        updateColour();
+        updateCustom();
+        updateChainwireUI();
+        render();
+      });
+      el.slide.addEventListener("change",function(){updateSlideUI();render()});
+      el.quoteForm.addEventListener("submit",handleQuoteSubmit);
+    }
+
+    updatePerimeter();
+    updateHeights();
+    updateSleeper();
+    updateColour();
+    updateCustom();
+    updateChainwireUI();
+    updateSlideUI();
+    bind();
+    render();
+  })();
+})();
