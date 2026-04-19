@@ -488,35 +488,35 @@
 
       const PREVIEW_MAP={
         colorbondStd:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/colorbond-hero-image.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/colorbond-hero-image.png/",
           label:"Colorbond fence"
         },
         poolAlu:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Pool-fencing-cairns-hero-image.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Pool-fencing-cairns-hero-image.png/",
           label:"Flat top pool fence"
         },
         poolGlass:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/glassfence-cairns.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/glassfence-cairns.png/",
           label:"Glass pool fence"
         },
         aluSlat:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Aluminumslat-hero-image.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/Aluminumslat-hero-image.png/",
           label:"Aluminium slat fence"
         },
         press:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/presspoint.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/presspoint.png/",
           label:"Spear top / press point fence"
         },
         timberStd:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
           label:"Timber paling fence"
         },
         timberOC18:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
           label:"Timber overlap and cap fence"
         },
         timberOC20:{
-          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/:/rs=h:175,m",
+          src:"https://img1.wsimg.com/isteam/ip/228f7ec4-d3e5-44c1-aeb1-3954d9b015b2/timberfencecairns.png/",
           label:"Timber overlap and cap with sleeper base"
         }
       };
